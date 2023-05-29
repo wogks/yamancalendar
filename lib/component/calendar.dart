@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:videocall2/const/colors.dart';
 
-class Calendar extends StatefulWidget {
-  const Calendar({super.key});
-
-  @override
-  State<Calendar> createState() => _CalendarState();
-}
-
-class _CalendarState extends State<Calendar> {
-  DateTime? selectedDay;
-
+class Calendar extends StatelessWidget {
+  final DateTime? selectedDay;
+  final DateTime focusedDay;
+  final OnDaySelected onDaySelected;
+  Calendar({
+    super.key,
+    required this.selectedDay,
+    required this.focusedDay,
+    required this.onDaySelected,
+  });
   final defaultBoxDeco = BoxDecoration(
     color: Colors.grey[200],
     borderRadius: BorderRadius.circular(6),
@@ -24,7 +24,9 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
-      focusedDay: DateTime.now(),
+      //언어
+      locale: 'ko_KR',
+      focusedDay: focusedDay,
       firstDay: DateTime(1800),
       lastDay: DateTime(3000),
       headerStyle: const HeaderStyle(
@@ -56,12 +58,12 @@ class _CalendarState extends State<Calendar> {
         defaultTextStyle: defaultTextStyle,
         weekendTextStyle: defaultTextStyle,
         selectedTextStyle: defaultTextStyle.copyWith(color: PRIMARY_COLOR),
+        //기본값이 동그라미라서 다른달의 날짜를 선택하면 에러가난다
+        outsideDecoration: const BoxDecoration(
+          shape: BoxShape.rectangle,
+        ),
       ),
-      onDaySelected: (selectedDay, focusedDay) {
-        setState(() {
-          this.selectedDay = selectedDay;
-        });
-      },
+      onDaySelected: onDaySelected,
       //누른날짜에 색칠
       selectedDayPredicate: (day) {
         //day == selectedDay; 이렇게 안하는 이유는 시, 분,초 까지 같을 필요가 없기 때문
