@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:videocall2/const/colors.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -10,6 +11,16 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   DateTime? selectedDay;
+
+  final defaultBoxDeco = BoxDecoration(
+    color: Colors.grey[200],
+    borderRadius: BorderRadius.circular(6),
+  );
+
+  final defaultTextStyle = TextStyle(
+    color: Colors.grey[600],
+    fontWeight: FontWeight.w700,
+  );
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
@@ -24,6 +35,27 @@ class _CalendarState extends State<Calendar> {
           fontWeight: FontWeight.w700,
           fontSize: 16,
         ),
+      ),
+      calendarStyle: CalendarStyle(
+        //오늘날짜 표시
+        isTodayHighlighted: false,
+        //날짜가 들어있는 컨테이너를 데코레이션(주말제외)
+        defaultDecoration: defaultBoxDeco,
+        //주말 데코
+        weekendDecoration: defaultBoxDeco,
+        //선택된 박스 데코
+        selectedDecoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          //테두리
+          border: Border.all(
+            width: 1,
+            color: PRIMARY_COLOR,
+          ),
+        ),
+        defaultTextStyle: defaultTextStyle,
+        weekendTextStyle: defaultTextStyle,
+        selectedTextStyle: defaultTextStyle.copyWith(color: PRIMARY_COLOR),
       ),
       onDaySelected: (selectedDay, focusedDay) {
         setState(() {
