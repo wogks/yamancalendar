@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:videocall2/screen/home_screen.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: HomeScreen(),
-  ));
+  runApp(
+    MaterialApp(
+      theme: ThemeData(fontFamily: 'NotoSans'),
+      home: const HomeScreen(),
+    ),
+  );
 }
