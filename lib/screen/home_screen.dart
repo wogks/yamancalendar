@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:videocall2/component/calendar.dart';
+import 'package:videocall2/component/schedule_card.dart';
 import 'package:videocall2/component/today_banner.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,6 +34,16 @@ class _HomeScreenState extends State<HomeScreen> {
               //널이 안되게 위에 스테이트에서 오늘 날짜로 초기화
               selectedDay: selectedDay,
               scheduledCount: 3,
+            ),
+            const SizedBox(height: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: ScheduleCard(
+                startTime: 9,
+                endTime: 14,
+                content: '공부하기',
+                color: Colors.red,
+              ),
             ),
           ],
         ),
