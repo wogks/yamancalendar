@@ -9,24 +9,31 @@ class ScheduleBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     //핸드폰에서 시스템이 유아이를 차지하는 부분(이만큼 바텀시트에 패딩을 주지 않으면 키보드에 텍스트필드가 가려진다)
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-    return Container(
-      color: Colors.white,
-      height: MediaQuery.of(context).size.height / 2 + bottomInset,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: bottomInset),
-        child: const Padding(
-          padding: EdgeInsets.only(left: 8, right: 8, top: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Time(),
-              SizedBox(height: 16),
-              _Contents(),
-              SizedBox(height: 16),
-              _ColorPicker(),
-              SizedBox(height: 8),
-              _SaveButton()
-            ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: SafeArea(
+        child: Container(
+          color: Colors.white,
+          height: MediaQuery.of(context).size.height / 2 + bottomInset,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: bottomInset),
+            child: const Padding(
+              padding: EdgeInsets.only(left: 8, right: 8, top: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _Time(),
+                  SizedBox(height: 16),
+                  _Contents(),
+                  SizedBox(height: 16),
+                  _ColorPicker(),
+                  SizedBox(height: 8),
+                  _SaveButton()
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -44,12 +51,14 @@ class _Time extends StatelessWidget {
         Expanded(
           child: CustomTextField(
             label: '시작시간',
+            isTime: true,
           ),
         ),
         SizedBox(width: 16),
         Expanded(
           child: CustomTextField(
             label: '마감시간',
+            isTime: true,
           ),
         ),
       ],
@@ -62,8 +71,11 @@ class _Contents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CustomTextField(
-      label: '내용',
+    return const Expanded(
+      child: CustomTextField(
+        isTime: false,
+        label: '내용',
+      ),
     );
   }
 }

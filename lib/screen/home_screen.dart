@@ -52,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: const Icon(Icons.add),
       onPressed: () {
         showModalBottomSheet(
+          //바텀시트는 원래 화면의 반이 최대사이즈이지만 이걸 트루로 하면 키보드보다 위로 더 올라온다
           isScrollControlled: true,
           context: context,
           builder: (context) {
