@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:videocall2/component/calendar.dart';
+import 'package:videocall2/component/schedule_bottom_sheet.dart';
 import 'package:videocall2/component/schedule_card.dart';
 import 'package:videocall2/component/today_banner.dart';
+import 'package:videocall2/const/colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: renderFloatingActionbutton(),
       body: SafeArea(
         child: Column(
           children: [
@@ -36,26 +39,26 @@ class _HomeScreenState extends State<HomeScreen> {
               scheduledCount: 3,
             ),
             const SizedBox(height: 8),
-            Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 8),
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return const ScheduleCard(
-                        startTime: 9,
-                        endTime: 14,
-                        content: '공부하기',
-                        color: Colors.red,
-                      );
-                    },
-                  )),
-            ),
+            const _ScheduleList(),
           ],
         ),
       ),
+    );
+  }
+
+  FloatingActionButton renderFloatingActionbutton() {
+    return FloatingActionButton(
+      backgroundColor: PRIMARY_COLOR,
+      child: const Icon(Icons.add),
+      onPressed: () {
+        showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          builder: (context) {
+            return const ScheduleBottomSheet();
+          },
+        );
+      },
     );
   }
 
@@ -65,5 +68,29 @@ class _HomeScreenState extends State<HomeScreen> {
       //다른달의 날짜를 선택하면 달력이 이동한다
       this.focusedDay = selectedDay;
     });
+  }
+}
+
+class _ScheduleList extends StatelessWidget {
+  const _ScheduleList();
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: ListView.separated(
+            separatorBuilder: (context, index) => const SizedBox(height: 8),
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return const ScheduleCard(
+                startTime: 9,
+                endTime: 14,
+                content: '공부하기',
+                color: Colors.red,
+              );
+            },
+          )),
+    );
   }
 }
