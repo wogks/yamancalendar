@@ -15,7 +15,7 @@ class Schedules extends Table {
   //category color table id
   IntColumn get colorId => integer()();
 
-  //생성날짜
+  //생성날짜 클라이언트 디폴트 안에 함수를 받을수 있다. 인위적으로 넣으면 클라이언트 디폴트가 실행이 안되고 직접 넣을값으로 set된다
   DateTimeColumn get createdAt => dateTime().clientDefault(
         () => DateTime.now(),
       )();

@@ -372,7 +372,11 @@ class $CategoryColorsTable extends CategoryColors
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _hexCodeMeta =
       const VerificationMeta('hexCode');
   @override
@@ -392,8 +396,6 @@ class $CategoryColorsTable extends CategoryColors
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('hex_code')) {
       context.handle(_hexCodeMeta,
@@ -405,7 +407,7 @@ class $CategoryColorsTable extends CategoryColors
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   CategoryColor map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -485,36 +487,28 @@ class CategoryColor extends DataClass implements Insertable<CategoryColor> {
 class CategoryColorsCompanion extends UpdateCompanion<CategoryColor> {
   final Value<int> id;
   final Value<String> hexCode;
-  final Value<int> rowid;
   const CategoryColorsCompanion({
     this.id = const Value.absent(),
     this.hexCode = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   CategoryColorsCompanion.insert({
-    required int id,
+    this.id = const Value.absent(),
     required String hexCode,
-    this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        hexCode = Value(hexCode);
+  }) : hexCode = Value(hexCode);
   static Insertable<CategoryColor> custom({
     Expression<int>? id,
     Expression<String>? hexCode,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (hexCode != null) 'hex_code': hexCode,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  CategoryColorsCompanion copyWith(
-      {Value<int>? id, Value<String>? hexCode, Value<int>? rowid}) {
+  CategoryColorsCompanion copyWith({Value<int>? id, Value<String>? hexCode}) {
     return CategoryColorsCompanion(
       id: id ?? this.id,
       hexCode: hexCode ?? this.hexCode,
-      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -527,9 +521,6 @@ class CategoryColorsCompanion extends UpdateCompanion<CategoryColor> {
     if (hexCode.present) {
       map['hex_code'] = Variable<String>(hexCode.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
@@ -537,8 +528,7 @@ class CategoryColorsCompanion extends UpdateCompanion<CategoryColor> {
   String toString() {
     return (StringBuffer('CategoryColorsCompanion(')
           ..write('id: $id, ')
-          ..write('hexCode: $hexCode, ')
-          ..write('rowid: $rowid')
+          ..write('hexCode: $hexCode')
           ..write(')'))
         .toString();
   }

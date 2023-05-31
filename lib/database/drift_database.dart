@@ -20,9 +20,10 @@ class LocalDatabase extends _$LocalDatabase {
   Future<int> createSchedule(SchedulesCompanion data) =>
       into(schedules).insert(data);
 
-  Future<int> createColor(CategoryColorsCompanion data) =>
+  Future<int> createCategoryColor(CategoryColorsCompanion data) =>
       into(categoryColors).insert(data);
 
+  //모든색을 가져올것이기 때문에 파라미터는 따로 받지 않는다
   Future<List<CategoryColor>> getCategoryColors() =>
       select(categoryColors).get();
 
