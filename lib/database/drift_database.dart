@@ -15,6 +15,21 @@ part 'drift_database.g.dart';
 ])
 class LocalDatabase extends _$LocalDatabase {
   LocalDatabase() : super(_openConnection());
+
+  // schedules테이블안에 데이터를 넣을거다(row를 만들거다)
+  Future<int> createSchedule(SchedulesCompanion data) =>
+      into(schedules).insert(data);
+
+  Future<int> createColor(CategoryColorsCompanion data) =>
+      into(categoryColors).insert(data);
+
+  Future<List<CategoryColor>> getCategoryColors() =>
+      select(categoryColors).get();
+
+  //생성한 데이터베이스 테이블의 버전
+  //데이터베이스의 구조가 바뀔때마다 버전을 올려줘야한다
+  @override
+  int get schemaVersion => 1;
 }
 
 LazyDatabase _openConnection() {
