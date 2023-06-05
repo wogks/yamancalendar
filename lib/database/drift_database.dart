@@ -27,6 +27,8 @@ class LocalDatabase extends _$LocalDatabase {
   Future<List<CategoryColor>> getCategoryColors() =>
       select(categoryColors).get();
 
+  Stream<List<Schedule>> watchSchedules() => select(schedules).watch();
+
   //생성한 데이터베이스 테이블의 버전
   //데이터베이스의 구조가 바뀔때마다 버전을 올려줘야한다
   @override

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:videocall2/component/calendar.dart';
 import 'package:videocall2/component/schedule_bottom_sheet.dart';
 import 'package:videocall2/component/schedule_card.dart';
 import 'package:videocall2/component/today_banner.dart';
 import 'package:videocall2/const/colors.dart';
+import 'package:videocall2/database/drift_database.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,8 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
           isScrollControlled: true,
           context: context,
           builder: (context) {
-            return  ScheduleBottomSheet(
-            selectedDate: selectedDay,
+            return ScheduleBottomSheet(
+              selectedDate: selectedDay,
             );
           },
         );
@@ -82,18 +84,24 @@ class _ScheduleList extends StatelessWidget {
     return Expanded(
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: ListView.separated(
-            separatorBuilder: (context, index) => const SizedBox(height: 8),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return const ScheduleCard(
-                startTime: 9,
-                endTime: 14,
-                content: '공부하기',
-                color: Colors.red,
-              );
-            },
-          )),
+          child: StreamBuilder<List<Schedule>>(
+              stream: GetIt.I<LocalDatabase>().watchSchedules(),
+              builder: (context, snapshot) {
+                print(snapshot.data);
+                return ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 8),
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return const ScheduleCard(
+                      startTime: 9,
+                      endTime: 14,
+                      content: '공부하기',
+                      color: Colors.red,
+                    );
+                  },
+                );
+              })),
     );
   }
 }
