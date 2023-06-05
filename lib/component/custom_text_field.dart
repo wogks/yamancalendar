@@ -5,10 +5,11 @@ import 'package:videocall2/const/colors.dart';
 class CustomTextField extends StatelessWidget {
   final String label;
   final bool isTime;
+  final FormFieldSetter<String> onSaved;
   const CustomTextField({
     super.key,
     required this.label,
-    required this.isTime,
+    required this.isTime, required this.onSaved,
   });
 
   @override
@@ -29,6 +30,8 @@ class CustomTextField extends StatelessWidget {
 
   Widget renderTextFiled() {
     return TextFormField(
+      //상위에 있는 form에서 save라는 함수를 불렀을때 실행이 된다
+      onSaved: onSaved,
       //null이 return되면 에러가 없다
       //에러가 있으면 에러를 String 값으로 리턴해준다
       validator: (value) {
