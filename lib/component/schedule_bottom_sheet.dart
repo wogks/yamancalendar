@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:videocall2/component/custom_text_field.dart';
 import 'package:videocall2/const/colors.dart';
+import 'package:videocall2/database/drift_database.dart';
 
 class ScheduleBottomSheet extends StatefulWidget {
   const ScheduleBottomSheet({super.key});
@@ -56,7 +58,20 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    const _ColorPicker(),
+                    FutureBuilder<List<CategoryColor>>(
+                      future: GetIt.I<LocalDatabase>().getCategoryColors(),
+                      builder: (context, snapshot) {
+                        print(snapshot.data);
+                        return _ColorPicker(
+                          colors: snapshot.hasData
+                              ? snapshot.data!
+                                  .map((e) => Color(
+                                      int.parse('FF${e.hexCode}', radix: 16)))
+                                  .toList()
+                              : [],
+                        );
+                      },
+                    ),
                     const SizedBox(height: 8),
                     _SaveButton(
                       onPressed: onSavePressed,
@@ -78,11 +93,6 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
     }
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      print('에러가없습니다');
-      print('$startTime');
-      print('$endTime');
-      print('$content');
-      
     } else {
       print('에러가 있습니다');
     }
@@ -138,7 +148,8 @@ class _Contents extends StatelessWidget {
 }
 
 class _ColorPicker extends StatelessWidget {
-  const _ColorPicker();
+  final List<Color> colors;
+  const _ColorPicker({required this.colors});
 
   @override
   Widget build(BuildContext context) {
@@ -148,15 +159,7 @@ class _ColorPicker extends StatelessWidget {
       spacing: 8,
       //상하간격
       runSpacing: 10,
-      children: [
-        renderColor(Colors.red),
-        renderColor(Colors.orange),
-        renderColor(Colors.yellow),
-        renderColor(Colors.green),
-        renderColor(Colors.blue),
-        renderColor(Colors.indigo),
-        renderColor(Colors.purple),
-      ],
+      children: colors.map((e) => renderColor(e)).toList(),
     );
   }
 
