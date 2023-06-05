@@ -28,6 +28,8 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
             child: Padding(
               padding: const EdgeInsets.only(left: 8, right: 8, top: 16),
               child: Form(
+                //따로 버튼을 누르지 않아도 자동으로 밸리데이트 해줌
+                autovalidateMode: AutovalidateMode.always,
                 key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

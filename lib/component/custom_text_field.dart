@@ -35,11 +35,22 @@ class CustomTextField extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return '값을 입력해주세요';
         }
+        if (isTime) {
+          int time = int.parse(value);
+
+          if (time < 0) {
+            return '0이상의 숫자를 입력하세요';
+          }
+          if (time > 24) {
+            return '24이하의 숫자를 입력해주세요';
+          }
+        } else {}
         return null;
       },
       expands: !isTime,
       //자동 줄바꿈
       maxLines: isTime ? 1 : null,
+      maxLength: 500,
       keyboardType: isTime
           ? const TextInputType.numberWithOptions()
           : TextInputType.multiline,
