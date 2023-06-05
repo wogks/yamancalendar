@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:videocall2/component/custom_text_field.dart';
@@ -5,7 +6,8 @@ import 'package:videocall2/const/colors.dart';
 import 'package:videocall2/database/drift_database.dart';
 
 class ScheduleBottomSheet extends StatefulWidget {
-  const ScheduleBottomSheet({super.key});
+  final DateTime selectedDate;
+  const ScheduleBottomSheet({super.key, required this.selectedDate});
 
   @override
   State<ScheduleBottomSheet> createState() => _ScheduleBottomSheetState();
@@ -38,7 +40,7 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
               padding: const EdgeInsets.only(left: 8, right: 8, top: 16),
               child: Form(
                 //따로 버튼을 누르지 않아도 자동으로 밸리데이트 해줌
-                autovalidateMode: AutovalidateMode.always,
+                // autovalidateMode: AutovalidateMode.always,
                 key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,13 +95,22 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
     );
   }
 
-  void onSavePressed() {
+  void onSavePressed() async {
     //formkey는 생성을 했는데 form위젯과 결합을 안했을때
     if (formKey.currentState == null) {
       return;
     }
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
+      final key =
+          await GetIt.I<LocalDatabase>().createSchedule(SchedulesCompanion(
+        date: Value(widget.selectedDate),
+        startTime: Value(startTime!),
+        endTime: Value(endTime!),
+        content: Value(content!),
+        colorId: Value(selectedColorId ?? 0),
+      ));
+      Navigator.of(context).pop();
     } else {
       print('에러가 있습니다');
     }
