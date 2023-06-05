@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  DateTime selectedDay = DateTime(
+  DateTime selectedDay = DateTime.utc(
     DateTime.now().year,
     DateTime.now().month,
     DateTime.now().day,
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
               scheduledCount: 3,
             ),
             const SizedBox(height: 8),
-            const _ScheduleList(),
+            _ScheduleList(selectedDate: selectedDay),
           ],
         ),
       ),
@@ -77,7 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _ScheduleList extends StatelessWidget {
-  const _ScheduleList();
+  final DateTime selectedDate;
+  const _ScheduleList({required this.selectedDate});
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +89,16 @@ class _ScheduleList extends StatelessWidget {
               stream: GetIt.I<LocalDatabase>().watchSchedules(),
               builder: (context, snapshot) {
                 print(snapshot.data);
+
+                List<Schedule> schedules = [];
+                if (snapshot.hasData) {
+                  schedules = snapshot.data!
+                      .where((element) => element.date == selectedDate)
+                      .toList();
+                  print('-------------------filtered Date');
+                  print(selectedDate);
+                  print(schedules);
+                }
                 return ListView.separated(
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 8),
