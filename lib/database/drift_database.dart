@@ -17,6 +17,10 @@ part 'drift_database.g.dart';
 class LocalDatabase extends _$LocalDatabase {
   LocalDatabase() : super(_openConnection());
 
+  //그냥 get()을 하면 데이터 하나만 불러도 리스트안에 넣어서 준다
+  Future<Schedule> getScheduleById(int id) =>
+      (select(schedules)..where((tbl) => tbl.id.equals(id))).getSingle();
+
   // schedules테이블안에 데이터를 넣을거다(row를 만들거다)
   Future<int> createSchedule(SchedulesCompanion data) =>
       into(schedules).insert(data);
@@ -30,6 +34,9 @@ class LocalDatabase extends _$LocalDatabase {
 
   Future<int> removeSchedule(int id) =>
       (delete(schedules)..where((tbl) => tbl.id.equals(id))).go();
+
+  Future<int> updateScheduleById(int id, SchedulesCompanion data) =>
+      (update(schedules)..where((tbl) => tbl.id.equals(id))).write(data);
 
   Stream<List<ScheduleWithColor>> watchSchedules(DateTime date) {
     final query = select(schedules).join([

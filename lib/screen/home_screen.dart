@@ -25,27 +25,31 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime focusedDay = DateTime.now();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: renderFloatingActionbutton(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Calendar(
-              focusedDay: focusedDay,
-              selectedDay: selectedDay,
-              onDaySelected: onDaySelected,
+    return FutureBuilder<Schedule>(
+        future: null,
+        builder: (context, snapshot) {
+          return Scaffold(
+            floatingActionButton: renderFloatingActionbutton(),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Calendar(
+                    focusedDay: focusedDay,
+                    selectedDay: selectedDay,
+                    onDaySelected: onDaySelected,
+                  ),
+                  const SizedBox(height: 8),
+                  TodayBanner(
+                    //널이 안되게 위에 스테이트에서 오늘 날짜로 초기화
+                    selectedDay: selectedDay,
+                  ),
+                  const SizedBox(height: 8),
+                  _ScheduleList(selectedDate: selectedDay),
+                ],
+              ),
             ),
-            const SizedBox(height: 8),
-            TodayBanner(
-              //널이 안되게 위에 스테이트에서 오늘 날짜로 초기화
-              selectedDay: selectedDay,
-            ),
-            const SizedBox(height: 8),
-            _ScheduleList(selectedDate: selectedDay),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
   FloatingActionButton renderFloatingActionbutton() {
@@ -109,13 +113,28 @@ class _ScheduleList extends StatelessWidget {
                         GetIt.I<LocalDatabase>()
                             .removeSchedule(scheduleWithColor.schedule.id);
                       },
-                      child: ScheduleCard(
-                        startTime: scheduleWithColor.schedule.startTime,
-                        endTime: scheduleWithColor.schedule.endTime,
-                        content: scheduleWithColor.schedule.content,
-                        color: Color(int.parse(
-                            'FF${scheduleWithColor.categoryColor.hexCode}',
-                            radix: 16)),
+                      child: GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            //바텀시트는 원래 화면의 반이 최대사이즈이지만 이걸 트루로 하면 키보드보다 위로 더 올라온다
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) {
+                              return ScheduleBottomSheet(
+                                selectedDate: selectedDate,
+                                scheduleID: scheduleWithColor.schedule.id,
+                              );
+                            },
+                          );
+                        },
+                        child: ScheduleCard(
+                          startTime: scheduleWithColor.schedule.startTime,
+                          endTime: scheduleWithColor.schedule.endTime,
+                          content: scheduleWithColor.schedule.content,
+                          color: Color(int.parse(
+                              'FF${scheduleWithColor.categoryColor.hexCode}',
+                              radix: 16)),
+                        ),
                       ),
                     );
                   },

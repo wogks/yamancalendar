@@ -5,12 +5,14 @@ import 'package:videocall2/const/colors.dart';
 class CustomTextField extends StatelessWidget {
   final String label;
   final bool isTime;
+  final String initialValue;
   final FormFieldSetter<String> onSaved;
   const CustomTextField({
     super.key,
     required this.label,
     required this.isTime,
     required this.onSaved,
+    required this.initialValue,
   });
 
   @override
@@ -61,6 +63,7 @@ class CustomTextField extends StatelessWidget {
       //숫자만 쓸수있게 한다
       inputFormatters: isTime ? [FilteringTextInputFormatter.digitsOnly] : [],
       cursorColor: Colors.grey,
+      initialValue: initialValue,
       decoration: InputDecoration(
         suffixText: isTime ? '시' : null,
         //밑줄 없애기
