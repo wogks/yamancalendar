@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:videocall2/const/colors.dart';
+import 'package:videocall2/database/drift_database.dart';
+import 'package:videocall2/model/schedule_with_color.dart';
 
 class TodayBanner extends StatelessWidget {
   final DateTime selectedDay;
-  final int scheduledCount;
+
   const TodayBanner({
     super.key,
     required this.selectedDay,
-    required this.scheduledCount,
   });
 
   @override
@@ -27,10 +29,18 @@ class TodayBanner extends StatelessWidget {
               '${selectedDay.year}년 ${selectedDay.month}월 ${selectedDay.day}일',
               style: textStyle,
             ),
-            Text(
-              '$scheduledCount개',
-              style: textStyle,
-            ),
+            StreamBuilder<List<ScheduleWithColor>>(
+                stream: GetIt.I<LocalDatabase>().watchSchedules(selectedDay),
+                builder: (context, snapshot) {
+                  int count = 0;
+                  if (snapshot.hasData) {
+                    count = snapshot.data!.length;
+                  }
+                  return Text(
+                    '$count개',
+                    style: textStyle,
+                  );
+                }),
           ],
         ),
       ),

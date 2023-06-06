@@ -39,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
             TodayBanner(
               //널이 안되게 위에 스테이트에서 오늘 날짜로 초기화
               selectedDay: selectedDay,
-              scheduledCount: 3,
             ),
             const SizedBox(height: 8),
             _ScheduleList(selectedDate: selectedDay),
