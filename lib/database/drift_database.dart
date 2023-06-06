@@ -34,6 +34,9 @@ class LocalDatabase extends _$LocalDatabase {
     ]);
 
     query.where(schedules.date.equals(date));
+    query.orderBy([
+      OrderingTerm.asc(schedules.startTime),
+    ]);
     return query.watch().map(
           (rows) => rows
               .map(
