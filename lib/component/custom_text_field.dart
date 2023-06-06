@@ -9,7 +9,8 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     required this.label,
-    required this.isTime, required this.onSaved,
+    required this.isTime,
+    required this.onSaved,
   });
 
   @override
@@ -61,6 +62,7 @@ class CustomTextField extends StatelessWidget {
       inputFormatters: isTime ? [FilteringTextInputFormatter.digitsOnly] : [],
       cursorColor: Colors.grey,
       decoration: InputDecoration(
+        suffixText: isTime ? '시' : null,
         //밑줄 없애기
         border: InputBorder.none,
         //이걸 넣어야 색깔을 넣을수 있다
