@@ -27,7 +27,15 @@ class LocalDatabase extends _$LocalDatabase {
   Future<List<CategoryColor>> getCategoryColors() =>
       select(categoryColors).get();
 
-  Stream<List<Schedule>> watchSchedules() => select(schedules).watch();
+  Stream<List<Schedule>> watchSchedules(DateTime date) {
+    // final query = select(schedules);
+    // query.where((tbl) => tbl.date.equals(date));
+    // return query.watch();
+
+    //..을 하면 결과가 리턴이 되는게 아니라 함수가 실해이 된 대상이 리턴이 된다
+    //return 3..toString을 하면 3의 인트값이 리턴이 됌
+    return (select(schedules)..where((tbl) => tbl.date.equals(date))).watch();
+  }
 
   //생성한 데이터베이스 테이블의 버전
   //데이터베이스의 구조가 바뀔때마다 버전을 올려줘야한다
