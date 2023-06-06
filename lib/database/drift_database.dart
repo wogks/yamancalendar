@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:videocall2/model/category_color.dart';
 import 'package:videocall2/model/schedule.dart';
 import 'package:path/path.dart' as p;
+import 'package:videocall2/model/schedule_with_color.dart';
 
 part 'drift_database.g.dart';
 
@@ -27,14 +28,26 @@ class LocalDatabase extends _$LocalDatabase {
   Future<List<CategoryColor>> getCategoryColors() =>
       select(categoryColors).get();
 
-  Stream<List<Schedule>> watchSchedules(DateTime date) {
-    // final query = select(schedules);
-    // query.where((tbl) => tbl.date.equals(date));
-    // return query.watch();
+  Stream<List<ScheduleWithColor>> watchSchedules(DateTime date) {
+    final query = select(schedules).join([
+      innerJoin(categoryColors, categoryColors.id.equalsExp(schedules.colorId)),
+    ]);
+
+    query.where(schedules.date.equals(date));
+    return query.watch().map(
+          (rows) => rows
+              .map(
+                (row) => ScheduleWithColor(
+                  schedule: row.readTable(schedules),
+                  categoryColor: row.readTable(categoryColors),
+                ),
+              )
+              .toList(),
+        );
 
     //..을 하면 결과가 리턴이 되는게 아니라 함수가 실해이 된 대상이 리턴이 된다
     //return 3..toString을 하면 3의 인트값이 리턴이 됌
-    return (select(schedules)..where((tbl) => tbl.date.equals(date))).watch();
+    // return (select(schedules)..where((tbl) => tbl.date.equals(date))).watch();
   }
 
   //생성한 데이터베이스 테이블의 버전
